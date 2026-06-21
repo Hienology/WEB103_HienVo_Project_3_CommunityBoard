@@ -9,6 +9,10 @@ body {
   background: #f7f7f2;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
 .app-shell {
   max-width: 1100px;
   margin: 0 auto;
@@ -16,16 +20,43 @@ body {
 }
 
 .site-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .site-header h1 {
   margin-bottom: 0.4rem;
+  font-size: 2.5rem;
+  color: #0f3a2a;
+}
+
+.hero-section {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(to right, #d5eadf, #e8f4ec);
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.hero-section h2 {
+  font-size: 2.25rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  color: #0f3a2a;
+}
+
+.hero-p {
+  color: #5b6e63;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 nav {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
 nav a,
@@ -33,11 +64,18 @@ nav a,
   color: #1f6b4f;
   text-decoration: none;
   font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+nav a:hover,
+.button-link:hover {
+  text-decoration: underline;
+  color: #0f3a2a;
 }
 
 .grid {
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .grid-cols-1 {
@@ -59,41 +97,95 @@ nav a,
 .card {
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.card h3 {
+  margin: 0.5rem 0;
+  font-size: 1.25rem;
+  color: #0f3a2a;
 }
 
 .muted {
   color: #5b6e63;
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
 }
 
 .badge-row {
   display: flex;
   gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .badge {
   font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.6rem;
   border-radius: 999px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .badge.sport {
-  background: #d5eadf;
+  background: #e2f0e9;
   color: #1f6b4f;
+  border: 1px solid #c2e0cf;
 }
 
 .badge.price {
-  background: #ffefcc;
-  color: #8a5a00;
+  background: #fff4d9;
+  color: #a36a00;
+  border: 1px solid #ffe4a8;
 }
 
-.upcoming-event {
-  border: 1px solid #d5eadf;
+.status-indicator {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.upcoming-event .status-indicator {
+  color: #1f6b4f;
 }
 
 .past-event {
-  opacity: 0.75;
-  border: 1px solid #d8d8d8;
+  opacity: 0.7;
+}
+
+.past-event .status-indicator {
+  color: #888;
+}
+
+.event-description {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #5b6e63;
+  font-size: 1.2rem;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: #d32f2f;
+  background: #ffebee;
+  border-radius: 8px;
+  margin: 1rem 0;
 }

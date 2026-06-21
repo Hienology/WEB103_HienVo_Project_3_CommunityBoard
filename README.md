@@ -1,6 +1,6 @@
 # Victory Commons
 
-Victory Commons is a full-stack community sports events board.
+Victory Commons is a full-stack community sports events board that connects local residents with free and affordable sports activities in their neighborhood, fostering active living and community engagement.
 
 ## Structure
 
@@ -14,6 +14,29 @@ Victory Commons is a full-stack community sports events board.
   - `src/services` fetch-based API layer
   - `src/components` reusable LocationCard and EventCard
   - `src/pages` Home, All Events, and Location Detail pages
+
+## Features
+- **Responsive Layouts**: Responsive 3-column event grids (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3`).
+- **Modern Typography**: Interfaced with Space Grotesk font stack for clean headings.
+- **Improved UI/UX**: Hover effects, clear sport and price badges with visual status indicators.
+- **Robust Error Handling**: Added clean loading and error states to all pages.
+
+## Deployment Notes (Render)
+
+### Deploying the Backend
+1. In Render, select **New > Web Service**.
+2. Connect your GitHub repository.
+3. Set the **Root Directory** to `backend`.
+4. Set the **Build Command** to `npm install`.
+5. Set the **Start Command** to `npm start`.
+6. Add your required Environment Variables (e.g. `DATABASE_URL`, `PORT`).
+
+### Deploying the Frontend
+1. In Render, select **New > Static Site**.
+2. Connect your GitHub repository.
+3. Set the **Root Directory** to `frontend`.
+4. Set the **Build Command** to `npm install && npm run build`.
+5. Set the **Publish Directory** to `dist`.
 
 ## API Endpoints
 

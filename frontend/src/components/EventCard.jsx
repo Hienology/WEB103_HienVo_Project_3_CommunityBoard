@@ -14,9 +14,13 @@ export default function EventCard({ event }) {
         <span className="badge price">{formatPrice(event.price)}</span>
       </div>
       <h3>{event.title}</h3>
-      <p className="muted">{eventDate.toLocaleString()}</p>
-      <p className="muted">{event.location_name}</p>
-      <p>{event.description}</p>
+      <p className="muted"><strong>Date:</strong> {eventDate.toLocaleString()}</p>
+      {event.location_name && <p className="muted"><strong>Location:</strong> {event.location_name}</p>}
+      <p className="event-description">{event.description}</p>
+      <div style={{ flexGrow: 1 }}></div>
+      <div className="status-indicator">
+        {isPast ? '• Past Event' : '• Upcoming Event'}
+      </div>
     </article>
   );
 }

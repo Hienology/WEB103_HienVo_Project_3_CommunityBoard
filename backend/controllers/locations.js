@@ -1,4 +1,4 @@
-import pool from '../config/database.js';
+import { pool } from '../config/database.js';
 
 export const getAllLocations = async () => {
   const result = await pool.query('SELECT id, name, address, description FROM locations ORDER BY id;');

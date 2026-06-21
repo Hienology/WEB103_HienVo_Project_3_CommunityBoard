@@ -1,72 +1,154 @@
-import pool from './database.js';
-
-const locations = [
-  ['Central Park Soccer Field', '125 Central Park Ave', 'Community-friendly field for youth and pickup soccer matches.'],
-  ['Riverside Basketball Courts', '88 Riverside Drive', 'Outdoor courts hosting pickup basketball and weekend tournaments.'],
-  ['Oakwood Baseball Diamond', '210 Oakwood Lane', 'Little league and amateur baseball games all season long.'],
-  ['Willow Creek Multi-Sport Park', '500 Willow Creek Rd', 'Flexible venue for track meets and mixed sport events.']
-];
-
-const events = [
-  ['U12 Soccer Finals', 'Soccer', '2026-07-10T17:30:00Z', 0, 'Youth championship match with local teams.', 1],
-  ['Sunset Pickup Hoops', 'Basketball', '2026-07-08T01:00:00Z', 5, 'Casual evening run for all skill levels.', 2],
-  ['Little League Opening Day', 'Baseball', '2026-07-12T15:00:00Z', 3, 'Family-friendly baseball opener with concessions.', 3],
-  ['Community Track Sprint Night', 'Track & Field', '2026-07-15T00:30:00Z', 0, 'Timed sprint heats and fun relay events.', 4],
-  ['Spring Soccer Friendly', 'Soccer', '2026-03-10T18:00:00Z', 0, 'Past exhibition game for style testing.', 1],
-  ['Neighborhood 3v3 Throwback', 'Basketball', '2026-02-14T20:00:00Z', 2, 'Past 3v3 showcase event.', 2]
-];
+import { pool } from './database.js';
+import 'dotenv/config';
 
 const resetDatabase = async () => {
   try {
-    await pool.query('BEGIN');
+    console.log('🔄 Connecting to Render PostgreSQL...');
 
-    await pool.query('DROP TABLE IF EXISTS events;');
-    await pool.query('DROP TABLE IF EXISTS locations;');
+    // Test connection
+    await pool.query('SELECT NOW()');
+    console.log('✅ Successfully connected to Render database');
 
+    console.log('🗑️  Dropping existing tables...');
+    await pool.query(`DROP TABLE IF EXISTS events CASCADE;`);
+    await pool.query(`DROP TABLE IF EXISTS locations CASCADE;`);
+
+    console.log('📦 Creating tables...');
+
+    // Create locations table with image_url
     await pool.query(`
       CREATE TABLE locations (
         id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        address TEXT NOT NULL,
-        description TEXT NOT NULL
+        name VARCHAR(100) UNIQUE NOT NULL,
+        description TEXT,
+        sport_focus VARCHAR(50),
+        image_url TEXT
       );
     `);
 
+    // Create events table
     await pool.query(`
       CREATE TABLE events (
         id SERIAL PRIMARY KEY,
-        title TEXT NOT NULL,
-        sport TEXT NOT NULL,
-        event_date TIMESTAMPTZ NOT NULL,
-        price NUMERIC(10, 2) NOT NULL DEFAULT 0,
-        description TEXT NOT NULL,
-        location_id INTEGER NOT NULL REFERENCES locations(id) ON DELETE CASCADE
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        event_date TIMESTAMP NOT NULL,
+        location_id INTEGER REFERENCES locations(id) ON DELETE CASCADE,
+        sport VARCHAR(50) NOT NULL,
+        category VARCHAR(50),
+        price VARCHAR(20) DEFAULT 'Free'
       );
     `);
 
-    for (const location of locations) {
-      await pool.query(
-        'INSERT INTO locations (name, address, description) VALUES ($1, $2, $3);',
-        location
-      );
-    }
+    console.log('📍 Seeding locations with cover images...');
 
-    for (const event of events) {
-      await pool.query(
-        `INSERT INTO events (title, sport, event_date, price, description, location_id)
-         VALUES ($1, $2, $3, $4, $5, $6);`,
-        event
-      );
-    }
+    const locationsResult = await pool.query(`
+      INSERT INTO locations (name, description, sport_focus, image_url) VALUES
+      ('Central Park Soccer Field', 
+       'The heart of weekend soccer. Great grass, friendly crowd, and always free to watch.', 
+       'Soccer',
+       'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800'),
+      
+      ('Riverside Basketball Courts', 
+       'Outdoor courts with lights. Home of the best pickup games and 3v3 tournaments in town.', 
+       'Basketball',
+       'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800'),
+      
+      ('Oakwood Baseball Diamond', 
+       'Classic neighborhood field. Little League games, adult softball, and weekend pick-up.', 
+       'Baseball',
+       'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800'),
+      
+      ('Willow Creek Multi-Sport Park', 
+       'Track, volleyball, ultimate frisbee and community fitness events. Something for everyone.', 
+       'Multi-Sport',
+       'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=800')
+      RETURNING id, name;
+    `);
 
-    await pool.query('COMMIT');
-    // eslint-disable-next-line no-console
-    console.log('Database reset complete.');
+    // Map location names to IDs
+    const locationMap = {};
+    locationsResult.rows.forEach(row => {
+      locationMap[row.name] = row.id;
+    });
+
+    console.log('🎯 Seeding 14 events...');
+
+    await pool.query(`
+      INSERT INTO events (title, description, event_date, location_id, sport, category, price) VALUES
+      -- === SOCCER ===
+      ('High School Varsity Soccer: Lincoln High vs Riverside Prep', 
+       'Big cross-town rivalry match. Come support the Lincoln Lions in this exciting local derby.', 
+       '2026-06-28 16:00:00', $1, 'Soccer', 'High School', 'Free'),
+
+      ('College Club Soccer: State University vs Metro College', 
+       'High-level club soccer between two strong local college teams.', 
+       '2026-07-05 18:30:00', $1, 'Soccer', 'College', 'Free'),
+
+      ('U14 Youth Soccer League Semifinals', 
+       'Local youth teams battle for a spot in the finals. Family-friendly atmosphere.', 
+       '2026-06-27 10:00:00', $1, 'Soccer', 'Youth (U14)', 'Free'),
+
+      -- === BASKETBALL ===
+      ('High School Boys Basketball Summer League Showcase', 
+       'Top high school players compete. College scouts often attend this event.', 
+       '2026-06-29 17:00:00', $2, 'Basketball', 'High School', 'Free'),
+
+      ('College Intramural 3v3 Basketball Tournament', 
+       'Open to all college students. Competitive but fun environment.', 
+       '2026-07-02 19:00:00', $2, 'Basketball', 'College', '$'),
+
+      ('Adult Pickup Basketball – All Levels Welcome', 
+       'Casual evening games with mixed ages and skill levels.', 
+       '2026-07-01 18:00:00', $2, 'Basketball', 'Adult (18+)', 'Free'),
+
+      -- === BASEBALL ===
+      ('High School Baseball Regional Playoff Game', 
+       'Winner advances to the state tournament. Strong pitching matchup expected.', 
+       '2026-06-30 16:30:00', $3, 'Baseball', 'High School', 'Free'),
+
+      ('College Club Baseball vs Alumni All-Stars', 
+       'Popular annual game between current players and former graduates.', 
+       '2026-07-04 14:00:00', $3, 'Baseball', 'College', 'Free'),
+
+      ('Little League All-Star Game (Ages 11-12)', 
+       'Best young local players come together for this exciting showcase.', 
+       '2026-06-26 17:00:00', $3, 'Baseball', 'Youth (11-12)', 'Free'),
+
+      -- === MULTI-SPORT ===
+      ('High School Track & Field District Championship', 
+       'Top athletes from across the district compete in sprints and field events.', 
+       '2026-07-03 09:00:00', $4, 'Track & Field', 'High School', 'Free'),
+
+      ('College Club Ultimate Frisbee Tournament', 
+       'Fast-growing sport with high energy and great sportsmanship.', 
+       '2026-07-06 11:00:00', $4, 'Ultimate Frisbee', 'College', 'Free'),
+
+      ('Community Coed Volleyball League – Week 5', 
+       'Recreational league for adults. All skill levels are welcome.', 
+       '2026-07-02 18:30:00', $4, 'Volleyball', 'Adult (18+)', '$'),
+
+      -- === PAST EVENTS (for testing) ===
+      ('Spring High School Soccer Invitational – Final', 
+       'One of the biggest high school soccer events of the spring season.', 
+       '2026-05-18 15:00:00', $1, 'Soccer', 'High School', 'Free'),
+
+      ('College Club Basketball Charity Classic', 
+       'Annual charity game supporting local youth sports programs.', 
+       '2026-05-30 18:00:00', $2, 'Basketball', 'College', 'Free')
+    `, [
+      locationMap['Central Park Soccer Field'],
+      locationMap['Riverside Basketball Courts'],
+      locationMap['Oakwood Baseball Diamond'],
+      locationMap['Willow Creek Multi-Sport Park']
+    ]);
+
+    console.log('✅ Database reset completed successfully!');
+    console.log('   → 4 locations with cover images');
+    console.log('   → 14 events (High School, College, Youth & Adult)');
+
   } catch (error) {
-    await pool.query('ROLLBACK');
-    // eslint-disable-next-line no-console
-    console.error('Database reset failed:', error);
-    process.exitCode = 1;
+    console.error('❌ Error resetting database:', error.message);
   } finally {
     await pool.end();
   }
