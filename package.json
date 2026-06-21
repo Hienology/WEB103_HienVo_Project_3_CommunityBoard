@@ -1,0 +1,12 @@
+{
+  "name": "victory-commons",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "test": "npm --prefix backend run test",
+    "build": "npm --prefix frontend run build"
+  }
+}
