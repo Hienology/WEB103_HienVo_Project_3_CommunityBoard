@@ -30,7 +30,7 @@ export default function HomePage() {
       {error && <div className="error">{error}</div>}
 
       {!loading && !error && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1">
           {locations.map((location) => (
             <LocationCard key={location.id} location={location} />
           ))}

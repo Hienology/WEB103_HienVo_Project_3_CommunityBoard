@@ -9,7 +9,9 @@ SELECT
   e.price,
   e.description,
   e.location_id,
-  l.name AS location_name
+  e.image_url,
+  l.name AS location_name,
+  l.image_url AS location_image_url
 FROM events e
 JOIN locations l ON l.id = e.location_id
 `;

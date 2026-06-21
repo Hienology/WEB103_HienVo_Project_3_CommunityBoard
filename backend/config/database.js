@@ -1,11 +1,26 @@
 import pg from 'pg';
 import 'dotenv/config';
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString =
+  process.env.DATABASE_URL ||
+  (process.env.PGHOST?.startsWith('postgresql://') ? process.env.PGHOST : null);
 
-export const pool = new pg.Pool({
-  connectionString,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+const poolConfig = connectionString
+  ? {
+      connectionString,
+      ssl: {
+        rejectUnauthorized: false
+      }
+    }
+  : {
+      user: process.env.PGUSER,
+      password: process.env.PGPASSWORD,
+      host: process.env.PGHOST,
+      port: process.env.PGPORT,
+      database: process.env.PGDATABASE,
+      ssl: {
+        rejectUnauthorized: false
+      }
+    };
+
+export const pool = new pg.Pool(poolConfig);

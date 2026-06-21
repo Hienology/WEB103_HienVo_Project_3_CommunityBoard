@@ -1,42 +1,50 @@
 import { Link } from 'react-router-dom';
 
-const LocationCard = ({ location, eventCount = 0 }) => {
+const LocationCard = ({ location }) => {
   return (
     <Link 
-      to={`/locations/${location.id}`}
-      className="group block bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-emerald-300 hover:shadow-lg transition-all duration-200"
+      to={`/locations/${location.id}`} 
+      style={{ textDecoration: 'none', color: 'inherit' }}
     >
-      {/* Cover Image */}
-      <div className="relative h-48 w-full overflow-hidden bg-slate-100">
-        <img 
-          src={location.image_url} 
-          alt={location.name}
-          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+      <article className="card" style={{ 
+        padding: 0, 
+        display: 'flex', 
+        flexDirection: 'row', 
+        alignItems: 'stretch',
+        minHeight: '180px',
+        overflow: 'hidden'
+      }}>
+        <div style={{ width: '180px', aspectRatio: '1 / 1', flexShrink: 0, backgroundColor: '#e2e8f0' }}>
+          <img 
+            src={location.image_url} 
+            alt={location.name} 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+          />
+        </div>
         
-        <div className="absolute bottom-4 left-4 right-4">
-          <h3 className="text-white text-xl font-semibold tracking-tight">
-            {location.name}
-          </h3>
-        </div>
-      </div>
-
-      <div className="p-5">
-        <p className="text-sm text-slate-600 line-clamp-2 mb-4">
-          {location.description}
-        </p>
-
-        <div className="flex items-center justify-between">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
-            {eventCount} upcoming games
-          </span>
+        <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+          <h3 style={{ marginTop: 0 }}>{location.name}</h3>
           
-          <span className="text-emerald-600 text-sm font-medium group-hover:underline">
-            Explore →
-          </span>
+          <div className="badge-row" style={{ marginTop: '0.25rem' }}>
+            {location.sport_focus && <span className="badge sport">{location.sport_focus}</span>}
+          </div>
+
+          <p className="event-description" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>
+            {location.description}
+          </p>
+          
+          <div style={{ flexGrow: 1 }}></div>
+          
+          <div style={{ 
+            color: '#1f6b4f', 
+            fontWeight: '600', 
+            fontSize: '0.9rem',
+            textAlign: 'right'
+          }}>
+            Explore events →
+          </div>
         </div>
-      </div>
+      </article>
     </Link>
   );
 };
