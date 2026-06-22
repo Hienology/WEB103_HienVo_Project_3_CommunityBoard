@@ -1,7 +1,13 @@
 function formatPrice(price) {
+  // If price is explicitly "Free" or null/undefined, return "Free"
+  if (!price || price.toLowerCase() === 'free') return 'Free';
+  
+  // If it's a string like "$", "$$", "$$$", just return it as is
+  if (price.startsWith('$')) return price;
+  
+  // Otherwise, try to format it as a number
   const value = Number(price);
-  if (isNaN(value) && price.toLowerCase() === 'free') return 'Free';
-  return isNaN(value) || value === 0 ? 'Free' : `$${value.toFixed(2)}`;
+  return isNaN(value) || value === 0 ? price : `$${value.toFixed(2)}`;
 }
 
 export default function EventCard({ event }) {

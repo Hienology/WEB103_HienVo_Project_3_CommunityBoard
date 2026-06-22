@@ -30,21 +30,28 @@ export default function LocationDetailPage() {
 
   return (
     <section>
-      <div style={{ marginBottom: '1rem' }}>
-        <Link to="/" className="button-link">← Back to Locations</Link>
-      </div>
-
       {loading && <div className="loading">Loading location details...</div>}
       {error && <div className="error">{error}</div>}
 
       {!loading && !error && location && (
         <>
-          <div className="hero-section" style={{ padding: '2rem 1rem', background: 'linear-gradient(to right, #e2f0e9, #f7fbf9)' }}>
-            <h2>{location.name}</h2>
-            <p className="hero-p">{location.address}</p>
-          </div>
+          <div 
+            className="fixed-bg" 
+            style={{
+              backgroundImage: `linear-gradient(rgba(15, 58, 42, 0.85), rgba(15, 58, 42, 0.85)), url('${location.image_url}')`
+            }}
+          />
+
+          <header className="site-header">
+            <h1 style={{ color: 'white', margin: '0 0 0.5rem 0', fontSize: '2.5rem' }}>{location.name}</h1>
+            <p style={{ color: 'rgba(255,255,255,0.9)', margin: 0, maxWidth: '600px', fontSize: '1.1rem' }}>{location.description}</p>
+            <nav style={{ marginTop: '1.5rem', display: 'flex', gap: '1.5rem' }}>
+              <Link to="/">← Back to Locations</Link>
+              <Link to="/events">All Events</Link>
+            </nav>
+          </header>
           
-          <h3 style={{ marginBottom: '1rem', color: '#0f3a2a' }}>Events at this location</h3>
+          <h3 style={{ marginBottom: '1rem', color: 'white' }}>Events at this location</h3>
           
           {events.length === 0 ? (
             <p className="muted">No events currently scheduled here.</p>

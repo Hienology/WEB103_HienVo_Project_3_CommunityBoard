@@ -45,25 +45,25 @@ const resetDatabase = async () => {
 
     const locationsResult = await pool.query(`
       INSERT INTO locations (name, description, sport_focus, image_url) VALUES
-      ('Central Park Soccer Field', 
+      ('Brooksville Park Soccer Field', 
        'The heart of weekend soccer. Great grass, friendly crowd, and always free to watch.', 
        'Soccer',
-       'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800'),
+       'https://images.sidearmdev.com/convert?url=https%3a%2f%2fdxbhsrqyrr690.cloudfront.net%2fsidearm.nextgen.sites%2fluther.edu%2fimages%2f2021%2f12%2f3%2fSoccer_Pitch_III.jpg&type=webp'),
       
       ('Riverside Basketball Courts', 
        'Outdoor courts with lights. Home of the best pickup games and 3v3 tournaments in town.', 
        'Basketball',
-       'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800'),
+       'https://streamline.imgix.net/9be7d580-ee10-457e-b190-a4c6692be86c/2e76c097-47d6-4733-85cf-abd893128415/i_1715890362171535.jpeg?ixlib=rb-1.1.0&w=2000&h=2000&fit=max&or=0&s=d57cb3d8014862954a7af4b266bb425c'),
       
       ('Oakwood Baseball Diamond', 
        'Classic neighborhood field. Little League games, adult softball, and weekend pick-up.', 
        'Baseball',
-       'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800'),
+       'https://www.nwathletic.com/wp-content/uploads/2020/05/IMG_1264.jpg'),
       
       ('Willow Creek Multi-Sport Park', 
        'Track, volleyball, ultimate frisbee and community fitness events. Something for everyone.', 
        'Multi-Sport',
-       'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=800')
+       'https://c.files.bbci.co.uk/6337/live/eeec04a0-1d6a-11f1-a77a-39b849d4606b.jpg')
       RETURNING id, name;
     `);
 
@@ -84,7 +84,7 @@ const resetDatabase = async () => {
 
       ('College Club Soccer: State University vs Metro College', 
        'High-level club soccer between two strong local college teams.', 
-       '2026-07-05 18:30:00', $1, 'Soccer', 'College', 'Free', 'https://images.unsplash.com/photo-1518605368461-1e1e38ce8ba9?w=800'),
+       '2026-07-05 18:30:00', $1, 'Soccer', 'College', '$$$', 'https://images.unsplash.com/photo-1518605368461-1e1e38ce8ba9?w=800'),
 
       ('U14 Youth Soccer League Semifinals', 
        'Local youth teams battle for a spot in the finals. Family-friendly atmosphere.', 
@@ -110,7 +110,7 @@ const resetDatabase = async () => {
 
       ('College Club Baseball vs Alumni All-Stars', 
        'Popular annual game between current players and former graduates.', 
-       '2026-07-04 14:00:00', $3, 'Baseball', 'College', 'Free', 'https://images.unsplash.com/photo-1498309313100-e308c0945b89?w=800'),
+       '2026-07-04 14:00:00', $3, 'Baseball', 'College', '$$', 'https://images.unsplash.com/photo-1498309313100-e308c0945b89?w=800'),
 
       ('Little League All-Star Game (Ages 11-12)', 
        'Best young local players come together for this exciting showcase.', 
@@ -138,7 +138,7 @@ const resetDatabase = async () => {
        'Annual charity game supporting local youth sports programs.', 
        '2026-05-30 18:00:00', $2, 'Basketball', 'College', 'Free', 'https://images.unsplash.com/photo-1519861531473-9200262188bf?w=800')
     `, [
-      locationMap['Central Park Soccer Field'],
+      locationMap['Brooksville Park Soccer Field'] || locationMap['Central Park Soccer Field'],
       locationMap['Riverside Basketball Courts'],
       locationMap['Oakwood Baseball Diamond'],
       locationMap['Willow Creek Multi-Sport Park']
